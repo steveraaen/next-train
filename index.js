@@ -1,34 +1,56 @@
 const express = require('express');
 const path = require('path');
-const generatePassword = require('password-generator');
+const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+const Substop = require('./models/SubStops');
 
 const app = express();
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-// Put all API endpoints under '/api'
-app.get('/api/passwords', (req, res) => {
-  const count = 5;
+mongoose.connect('mongodb://heroku_tm8f0g3q:q0amp91hikf6ki2vn1grsnov5o@ds163745.mlab.com:63745/heroku_tm8f0g3q', {
+  useMongoClient: true,
+}).then(function() {
+  console.log('Mongo connected via mongoose')
+})
 
-  // Generate some passwords
-  const passwords = Array.from(Array(count).keys()).map(i =>
-    generatePassword(12, false)
-  )
+app.get("/api/stops/:coordinates?", function(req, res) {
+	console.log(req.query)
+    var lat = parseFloat(req.query.coordinates[1]).toFixed(6)
+    var lng = parseFloat(req.query.coordinates[0]).toFixed(6)
+	console.log(lng)
+	console.log(lat)
+Substop.find({
+    geometry: {
+        $near: {
+            $geometry: {
+                type: "Point",
+                coordinates: [lng, lat]
+            },
+            $maxDistance: 500
+        }
+    }
+}, function(error, doc) {
+    if (error) {
+        console.log(error);
+    } else {
+        /*console.log(doc)*/
+        res.json(doc);
+    }
+}).limit(3)
 
-  // Return them as json
-  res.json(passwords);
-
-  console.log(`Sent ${count} passwords`);
 });
-
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  res.sendFile(path.join(__dirname+'/client/public/index.html'));
 });
 
 const port = process.env.PORT || 5000;
 app.listen(port);
 
-console.log(`Password generator listening on ${port}`);
+console.log(`Next Train listening on ${port}`);
+
+
+
