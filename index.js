@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 const Substop = require('./models/SubStops');
+const getMtaSched = require('./getMta');
 
 const app = express();
 
@@ -13,7 +14,8 @@ mongoose.connect('mongodb://heroku_tm8f0g3q:q0amp91hikf6ki2vn1grsnov5o@ds163745.
   useMongoClient: true,
 }).then(function() {
   console.log('Mongo connected via mongoose')
-})
+});
+
 
 app.get("/api/stops/:coordinates?", function(req, res) {
 	console.log(req.query)
@@ -28,7 +30,7 @@ Substop.find({
                 type: "Point",
                 coordinates: [lng, lat]
             },
-            $maxDistance: 500
+            $maxDistance: 5000,
         }
     }
 }, function(error, doc) {
@@ -38,7 +40,7 @@ Substop.find({
         /*console.log(doc)*/
         res.json(doc);
     }
-}).limit(3)
+}).limit(10)
 
 });
 // The "catchall" handler: for any request that doesn't
