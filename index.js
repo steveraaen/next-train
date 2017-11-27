@@ -2,8 +2,8 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-const Substop = require('./models/SubStops');
-const getMtaSched = require('./getMta');
+const mainSubStop = require('./models/MainStops.js');
+
 
 const app = express();
 
@@ -15,15 +15,18 @@ mongoose.connect('mongodb://heroku_tm8f0g3q:q0amp91hikf6ki2vn1grsnov5o@ds163745.
 }).then(function() {
   console.log('Mongo connected via mongoose')
 });
+// --------- route to find nearest stations-------------------
+
 
 
 app.get("/api/stops/:coordinates?", function(req, res) {
-	console.log(req.query)
+	console.log(parseFloat(req.query.coordinates))
     var lat = parseFloat(req.query.coordinates[1]).toFixed(6)
     var lng = parseFloat(req.query.coordinates[0]).toFixed(6)
 	console.log(lng)
 	console.log(lat)
-Substop.find({
+   /* getMtaSched()*/
+mainSubStop.find({
     geometry: {
         $near: {
             $geometry: {
@@ -37,12 +40,39 @@ Substop.find({
     if (error) {
         console.log(error);
     } else {
-        /*console.log(doc)*/
+        console.log(doc)
         res.json(doc);
     }
 }).limit(10)
 
 });
+
+
+// ------- route for selected train's schedule --------
+/*app.get("/api/train/:station?", function(req, res) {
+    var lat = parseFloat(req.query.coordinates[1]).toFixed(6)
+    var lng = parseFloat(req.query.coordinates[0]).toFixed(6)
+    console.log(req.query)
+    MainSubStop.find({
+    geometry: {
+        $near: {
+            $geometry: {
+                type: "Point",
+                coordinates: [lng, lat]
+            },
+            $maxDistance: 5000,
+        }
+    }
+}, function(error, doc) {
+    if (error) {
+    
+    } else {
+        console.log(doc)
+        res.json(doc);
+    }
+}).limit(10)
+
+});*/
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {

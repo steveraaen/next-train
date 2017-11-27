@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {List, ListItem} from 'material-ui/List';
+import {List, ListItem, makeSelectable} from 'material-ui/List';
 import Schedule from './Schedule';
 import CardExampleWithAvatar from './CardExample';
 
@@ -18,6 +18,7 @@ class App extends Component {
     this.handleClick = this.handleClick.bind(this)
     }
         getStops(lnglat) {
+          console.log(this.state.lnglat)
         return axios.get('/api/stops', {
                 params: {
                     coordinates: this.state.lnglat
@@ -44,27 +45,28 @@ class App extends Component {
             this.getStops()
 
         }.bind(this))
+        console.log(this.state)
     }
-    componentWillMount() {
-      this.getAll()  
+    componentDidMount() {
+      
+        this.getAll() 
     }
     handleClick(e) {
       e.preventDefault();
-        console.log(e.target.innerHTML)
+        console.log(e.target.value)
         console.log(this.state)
         this.setState({selectedStop: e.target.innerHTML})       
     }
     render() {
+     
   var stopArr = this.state.stops
       if(Array.isArray(stopArr)) {     
       console.log(stopArr.length)
       var newStopArr = stopArr.map((stp, idx) => 
+
+        <ListItem key={idx} id={stp.properties.stop_id} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name}/>
+
         
-        <ListItem className="row" key={idx} id={stp.properties.stop_id} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} >
-          <div className="col-sm-4" >{stp.properties.stop_name}</div>
-          <div className="col-sm-4" >{stp.properties.stop_id}</div>
-          <div className="col-sm-4" >{stp.properties.parent_station}</div>
-        </ListItem>
       )
 }
     return (
