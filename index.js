@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 const mainSubStop = require('./models/MainStops.js');
+var Mta = require('mta-gtfs');
 
 
 const app = express();
@@ -43,36 +44,27 @@ mainSubStop.find({
         console.log(doc)
         res.json(doc);
     }
-}).limit(10)
+}).limit(3)
 
 });
 
 
 // ------- route for selected train's schedule --------
-/*app.get("/api/train/:station?", function(req, res) {
-    var lat = parseFloat(req.query.coordinates[1]).toFixed(6)
-    var lng = parseFloat(req.query.coordinates[0]).toFixed(6)
-    console.log(req.query)
-    MainSubStop.find({
-    geometry: {
-        $near: {
-            $geometry: {
-                type: "Point",
-                coordinates: [lng, lat]
-            },
-            $maxDistance: 5000,
-        }
-    }
-}, function(error, doc) {
-    if (error) {
-    
-    } else {
-        console.log(doc)
-        res.json(doc);
-    }
-}).limit(10)
+app.get("/api/train/:station?", function(req, res) {
+    var feed = parseInt(req.query.feed);
+    var station = req.query.station;
+    console.log(feed)
+    console.log(station)
 
-});*/
+var mta = new Mta({
+  key: 'd95f1fb11f498729369198ba2d321657', // only needed for mta.schedule() method                 
+});
+if(req.query.station) {
+mta.schedule(station, feed).then(function (result) {
+  console.log(result);
+});
+}
+});
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {

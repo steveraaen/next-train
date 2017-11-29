@@ -4,14 +4,14 @@ import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {List, ListItem, makeSelectable} from 'material-ui/List';
 import Schedule from './Schedule';
-import CardExampleWithAvatar from './CardExample';
 
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          stops: {}
+          stops: {},
+          selectedStop: ""
         }
     this.getAll = this.getAll.bind(this)
     this.getStops = this.getStops.bind(this)
@@ -53,9 +53,15 @@ class App extends Component {
     }
     handleClick(e) {
       e.preventDefault();
-        console.log(e.target.value)
-        console.log(this.state)
-        this.setState({selectedStop: e.target.innerHTML})       
+       
+       console.log(e.currentTarget.dataset.id)
+       console.log(e.currentTarget.dataset.feed)
+        
+        this.setState({selectedStop: e.currentTarget.dataset.id,
+                               feed: e.currentTarget.dataset.feed
+                        })  
+
+
     }
     render() {
      
@@ -64,7 +70,7 @@ class App extends Component {
       console.log(stopArr.length)
       var newStopArr = stopArr.map((stp, idx) => 
 
-        <ListItem key={idx} id={stp.properties.stop_id} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name}/>
+        <ListItem key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name}/>
 
         
       )
@@ -76,8 +82,8 @@ class App extends Component {
             <h1>3 stations.</h1>
             <List >{newStopArr}</List>            
       </div>
-      <Schedule selStop={this.state.stops}/>
-      <CardExampleWithAvatar stops={ this.state.stops}/>
+      <Schedule selectedStop={this.state.selectedStop} feed={this.state.feed} nearestStops={this.state.stops}/>
+   
       </div>
       
     </MuiThemeProvider>

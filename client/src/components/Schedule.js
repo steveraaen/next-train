@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
 
 class Schedule extends Component {
 	constructor(props) {
@@ -12,7 +20,8 @@ class Schedule extends Component {
 getSchedule() {
 	return axios.get('./api/train', {
 		params: {
-			station: this.props.selStop
+			station: this.props.selectedStop,
+			feed: parseInt(this.props.feed)
 		}
 	}).then((response) => {
                 console.log(response)
@@ -24,7 +33,7 @@ getSchedule() {
 }
 componentWillReceiveProps(nextProps) {
 	console.log(this.props)
-	this.getSchedule(this.props)
+	this.getSchedule(this.nextProps)
 	}
 	render() {
 		return (
