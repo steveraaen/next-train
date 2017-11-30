@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import moment from 'moment'
 import {
   Table,
   TableBody,
@@ -12,33 +13,56 @@ import {
 class Schedule extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			schedule: ""
-		}
-	this.getSchedule = this.getSchedule.bind(this)
 	}
-getSchedule() {
-	return axios.get('./api/train', {
-		params: {
-			station: this.props.selectedStop,
-			feed: parseInt(this.props.feed)
-		}
-	}).then((response) => {
-                console.log(response)
-                this.setState({ schedule: response })
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-}
-componentWillReceiveProps(nextProps) {
-	console.log(this.props)
-	this.getSchedule(this.nextProps)
-	}
+
 	render() {
+	var northTimes = [];
+	var southTimes = [];
+	var allTimes = [];
+		if(this.props.timeTable) {	
+		var tt = this.props.timeTable
+		for(var n in tt) {
+			northTimes.push(tt[n].N)
+			southTimes.push(tt[n].S)
+		}
+		allTimes.push(northTimes, southTimes)
+console.log(allTimes)
+			for(let i = 0; i < 4; i++) {
+				var fullLine = <TableRow><TableRowColumn key={i}>{allTimes[0][0][i].arrivalTime}</TableRowColumn><TableRowColumn key={i+1}>{allTimes[1][0][i].arrivalTime}</TableRowColumn></TableRow>
+			}
+
+			
+		}
 		return (
-			<div>Hello</div>
+			<Table>
+				<TableHeader>
+					<TableRow>
+					    <TableHeaderColumn>North</TableHeaderColumn>
+					    <TableHeaderColumn>South</TableHeaderColumn>
+						
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					{fullLine}
+				</TableBody>
+			</Table>
 			)
 	} 
 }
 export default Schedule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

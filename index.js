@@ -51,6 +51,8 @@ mainSubStop.find({
 
 // ------- route for selected train's schedule --------
 app.get("/api/train/:station?", function(req, res) {
+console.log(req.query)
+
     var feed = parseInt(req.query.feed);
     var station = req.query.station;
     console.log(feed)
@@ -58,13 +60,20 @@ app.get("/api/train/:station?", function(req, res) {
 
 var mta = new Mta({
   key: 'd95f1fb11f498729369198ba2d321657', // only needed for mta.schedule() method                 
-});
+        });
+
 if(req.query.station) {
 mta.schedule(station, feed).then(function (result) {
   console.log(result);
+  res.json(result)
+        });
+
+    }
 });
-}
-});
+
+
+
+
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {

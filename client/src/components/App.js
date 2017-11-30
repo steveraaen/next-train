@@ -16,6 +16,7 @@ class App extends Component {
     this.getAll = this.getAll.bind(this)
     this.getStops = this.getStops.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this.getSchedule = this.getSchedule.bind(this)
     }
         getStops(lnglat) {
           console.log(this.state.lnglat)
@@ -47,20 +48,32 @@ class App extends Component {
         }.bind(this))
         console.log(this.state)
     }
+  getSchedule(station, feed) {
+    return axios.get('/api/train', {
+      params: {
+        station: this.state.selectedStop,
+        feed: parseInt(this.state.feed)
+      }
+
+    }).then((response) => {
+                  console.log(response)
+                  this.setState({ schedule: response.data.schedule })
+
+              })
+              .catch(function(error) {
+                  console.log(error);
+              });
+  }
     componentDidMount() {
       
         this.getAll() 
     }
     handleClick(e) {
-      e.preventDefault();
-       
-       console.log(e.currentTarget.dataset.id)
-       console.log(e.currentTarget.dataset.feed)
-        
-        this.setState({selectedStop: e.currentTarget.dataset.id,
-                               feed: e.currentTarget.dataset.feed
+      e.preventDefault();      
+       this.setState({selectedStop: e.currentTarget.dataset.id,
+                               feed: parseInt(e.currentTarget.dataset.feed)
                         })  
-
+      this.getSchedule(this.state.selectedStop, this.state.feed)
 
     }
     render() {
@@ -82,7 +95,7 @@ class App extends Component {
             <h1>3 stations.</h1>
             <List >{newStopArr}</List>            
       </div>
-      <Schedule selectedStop={this.state.selectedStop} feed={this.state.feed} nearestStops={this.state.stops}/>
+      <Schedule timeTable={this.state.schedule} />
    
       </div>
       
