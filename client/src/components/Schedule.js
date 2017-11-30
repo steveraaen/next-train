@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios'
-import moment from 'moment'
+import axios from 'axios';
+import moment from 'moment';
 import {
   Table,
   TableBody,
@@ -9,43 +9,100 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import {Tabs, Tab} from 'material-ui/Tabs';
+
+const styles = {
+  headline: {
+    fontSize: 24,
+    paddingTop: 16,
+    marginBottom: 12,
+    fontWeight: 400,
+  },
+};
+
 
 class Schedule extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			ts: Math.round((new Date()).getTime() / 1000),
+			value: 'a',
+		}
+
 	}
-
+  handleChange = (value) => {
+    this.setState({
+      value: value,
+    });
+  };
 	render() {
-	var northTimes = [];
-	var southTimes = [];
-	var allTimes = [];
-		if(this.props.timeTable) {	
-		var tt = this.props.timeTable
-		for(var n in tt) {
-			northTimes.push(tt[n].N)
-			southTimes.push(tt[n].S)
-		}
-		allTimes.push(northTimes, southTimes)
-console.log(allTimes)
-			for(let i = 0; i < 4; i++) {
-				var fullLine = <TableRow><TableRowColumn key={i}>{allTimes[0][0][i].arrivalTime}</TableRowColumn><TableRowColumn key={i+1}>{allTimes[1][0][i].arrivalTime}</TableRowColumn></TableRow>
-			}
 
-			
-		}
+		if(this.props.north && this.props.south) {
+
+	var nrth = this.props.north
+	var sth = this.props.south
+	console.log(this.props)
+		var nrthMap = nrth.map((time, idx) => 
+		<TableRow key={idx}>
+            <TableRowColumn key={idx + "_nt"}>{time.routeId}</TableRowColumn>
+            <TableRowColumn key={idx + "_nm"}>{moment.unix(time.arrivalTime).format("HH:mm")}</TableRowColumn>
+            <TableRowColumn key={idx + "_nts"}>{Math.round((time.arrivalTime - this.state.ts) / 60)}</TableRowColumn>
+          </TableRow>
+
+			)
+		var sthMap = sth.map((time, idx) => 
+		<TableRow key={idx}>
+            <TableRowColumn key={idx + "_st"}>{time.routeId}</TableRowColumn>
+            <TableRowColumn key={idx + "_sm"}>{moment.unix(time.arrivalTime).format("HH:mm")}</TableRowColumn>
+            <TableRowColumn key={idx + "_sts"}>{Math.round((time.arrivalTime - this.state.ts) / 60)}</TableRowColumn>
+          </TableRow>
+
+			)
+}
 		return (
-			<Table>
-				<TableHeader>
-					<TableRow>
-					    <TableHeaderColumn>North</TableHeaderColumn>
-					    <TableHeaderColumn>South</TableHeaderColumn>
-						
-					</TableRow>
-				</TableHeader>
-				<TableBody>
-					{fullLine}
-				</TableBody>
-			</Table>
+	<div className="App">
+<Tabs
+        value={this.state.value}
+        onChange={this.handleChange}
+      >
+        <Tab label="North" value="a">
+          <div>
+            <h2 style={styles.headline}>Northbound Trains</h2>
+		<Table >
+			<TableHeader displayRowCheckbox={false}>
+				<TableRow >
+			        <TableHeaderColumn>Arrives At</TableHeaderColumn>
+   					<TableHeaderColumn>Arrives In</TableHeaderColumn>					
+				</TableRow>
+			</TableHeader>
+			<TableBody displayRowCheckbox={false}>
+				{ nrthMap }
+			</TableBody>
+		</Table>
+          </div>
+        </Tab>
+        <Tab label="South" value="b">
+          <div>
+            <h2 style={styles.headline}>Southbound Trains</h2>
+		<Table >
+			<TableHeader displayRowCheckbox={false}>
+				<TableRow >
+			        <TableHeaderColumn>Arrives At</TableHeaderColumn>
+   					<TableHeaderColumn>Arrives In</TableHeaderColumn>					
+				</TableRow>
+			</TableHeader>
+			<TableBody displayRowCheckbox={false}>
+				{ sthMap }
+			</TableBody>
+		</Table>
+          </div>
+        </Tab>
+      </Tabs>
+
+
+
+
+	</div>
 			)
 	} 
 }

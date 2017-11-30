@@ -56,13 +56,20 @@ class App extends Component {
       }
 
     }).then((response) => {
-                  console.log(response)
-                  this.setState({ schedule: response.data.schedule })
 
-              })
-              .catch(function(error) {
-                  console.log(error);
-              });
+      console.log(response.data.schedule)
+      this.setState({ schedule: response.data.schedule })
+      for(var stp in response.data.schedule) {
+        this.setState({
+                    north: response.data.schedule[stp].N,
+                    south: response.data.schedule[stp].S
+        })
+      }
+
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
   }
     componentDidMount() {
       
@@ -83,9 +90,7 @@ class App extends Component {
       console.log(stopArr.length)
       var newStopArr = stopArr.map((stp, idx) => 
 
-        <ListItem key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name}/>
-
-        
+        <ListItem key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name}/>       
       )
 }
     return (
@@ -95,7 +100,7 @@ class App extends Component {
             <h1>3 stations.</h1>
             <List >{newStopArr}</List>            
       </div>
-      <Schedule timeTable={this.state.schedule} />
+      <Schedule schedule={this.state.schedule} north={this.state.north} south={this.state.south}/>
    
       </div>
       
