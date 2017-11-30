@@ -34,7 +34,6 @@ mainSubStop.find({
                 type: "Point",
                 coordinates: [lng, lat]
             },
-            $maxDistance: 5000,
         }
     }
 }, function(error, doc) {

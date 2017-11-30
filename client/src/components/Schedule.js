@@ -14,8 +14,8 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 const styles = {
   headline: {
     fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
+    paddingTop: 6,
+    marginBottom: 6,
     fontWeight: 400,
   },
 };
