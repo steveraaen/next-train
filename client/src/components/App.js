@@ -86,17 +86,16 @@ class App extends Component {
     render() {
      const listStyle = {
     list: {
-    fontSize: 24,
-    paddingTop: 16,
+
     color: 'white',
   },
 };
   var stopArr = this.state.stops
       if(Array.isArray(stopArr)) {     
-      console.log(stopArr.length)
+      console.log(stopArr)
       var newStopArr = stopArr.map((stp, idx) => 
 
-        <ListItem style={listStyle.list} key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name}/>       
+        <ListItem style={listStyle.list} key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name + "  is   " + Math.round(stp.distance.dist) + "  meters away"} secondaryText={stp.distance.dist}/>       
       )
 }
     return (

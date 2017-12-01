@@ -26,36 +26,42 @@ mongoose.connect('mongodb://heroku_tm8f0g3q:q0amp91hikf6ki2vn1grsnov5o@ds163745.
 })*/
 
 // --------- route to find nearest stations-------------------
-/*app.get("/api/dist/:coordinates?", function(req, res) {
+app.get("/api/stops/:coordinates?", function(req, res) {
     console.log(parseFloat(req.query.coordinates))
     var lat = parseFloat(req.query.coordinates[1]).toFixed(6)
     var lng = parseFloat(req.query.coordinates[0]).toFixed(6)
     console.log(lng)
     console.log(lat)
-    getMtaSched()
-mainSubStop.aggregate([{
+Subways.aggregate([{
     $geoNear: {
         near: {
             type: 'Point',
-            coordinates: [
-                -73.991084,
-                40.735863]},
+            coordinates: [-73.983980, 40.676697]
+        },
         spherical: true,
         distanceField: 'distance.dist',
         $maxDistance: 5000,
-        num: 20}
-}])
+        num: 5}
+}],
+function(error, doc) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log(doc)
+        res.json(doc);
+    }
+})
  
-});*/
+});
 
 
-app.get("/api/stops/:coordinates?", function(req, res) {
+/*app.get("/api/stops/:coordinates?", function(req, res) {
 	console.log(parseFloat(req.query.coordinates))
     var lat = parseFloat(req.query.coordinates[1]).toFixed(6)
     var lng = parseFloat(req.query.coordinates[0]).toFixed(6)
 	console.log(lng)
 	console.log(lat)
-   /* getMtaSched()*/
+  
 Subways.find({
     geometry: {
         $near: {
@@ -75,7 +81,7 @@ Subways.find({
     }
 }).limit(3)
 
-});
+});*/
 
 
 // ------- route for selected train's schedule --------

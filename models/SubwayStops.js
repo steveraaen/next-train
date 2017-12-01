@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var SubwaysSchema = new Schema({
   
   geometry: {
-	   	coordinates: {type: [Number], index: "2dsphere"},
+	   	coordinates: {type: [Number]},
 	   	type: {type: String, default: "Point"}
 	   }, 
   properties: {
