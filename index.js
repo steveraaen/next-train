@@ -2,7 +2,10 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-const mainSubStop = require('./models/MainStops.js');
+/*const mainsubstop = require('./models/MainStops.js');*/
+const Subways = require('./models/SubwayStops.js');
+/*var getMtaSched = require('./singleUse')*/
+
 var Mta = require('mta-gtfs');
 
 
@@ -16,8 +19,34 @@ mongoose.connect('mongodb://heroku_tm8f0g3q:q0amp91hikf6ki2vn1grsnov5o@ds163745.
 }).then(function() {
   console.log('Mongo connected via mongoose')
 });
-// --------- route to find nearest stations-------------------
 
+// temp route to load db
+/*app.get("/api/load", function(req, res){
+    getMtaSched()
+})*/
+
+// --------- route to find nearest stations-------------------
+/*app.get("/api/dist/:coordinates?", function(req, res) {
+    console.log(parseFloat(req.query.coordinates))
+    var lat = parseFloat(req.query.coordinates[1]).toFixed(6)
+    var lng = parseFloat(req.query.coordinates[0]).toFixed(6)
+    console.log(lng)
+    console.log(lat)
+    getMtaSched()
+mainSubStop.aggregate([{
+    $geoNear: {
+        near: {
+            type: 'Point',
+            coordinates: [
+                -73.991084,
+                40.735863]},
+        spherical: true,
+        distanceField: 'distance.dist',
+        $maxDistance: 5000,
+        num: 20}
+}])
+ 
+});*/
 
 
 app.get("/api/stops/:coordinates?", function(req, res) {
@@ -27,13 +56,14 @@ app.get("/api/stops/:coordinates?", function(req, res) {
 	console.log(lng)
 	console.log(lat)
    /* getMtaSched()*/
-mainSubStop.find({
+Subways.find({
     geometry: {
         $near: {
             $geometry: {
                 type: "Point",
                 coordinates: [lng, lat]
             },
+            
         }
     }
 }, function(error, doc) {

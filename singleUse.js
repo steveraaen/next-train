@@ -1,7 +1,7 @@
-/*var request = require('request');
+var request = require('request');
 var Mta = require('mta-gtfs');
 var moment = require('moment');
-var mainSubStop = require('./models/MainStops');
+var Subways = require('./models/SubwayStops');
 
 function getMtaSched() {
 
@@ -21,7 +21,7 @@ mta.stop().then(function (result) {
  
   for(stp in result) {
 if( ! result[stp].parent_station) {
-
+/*console.log(result[stp])*/
 
 	var feed;
 
@@ -35,10 +35,10 @@ if( ! result[stp].parent_station) {
     	feed = 21
     }
 
-	var mainStop = new mainSubStop({ 
-	 		  type: "Feature",	
+	var subway = new Subways({ 
+	 		 
 		  geometry: {
-			   	coordinates: [parseFloat(result[stp].stop_lon), parseFloat(result[stp].stop_lat)],
+			   	coordinates: [result[stp].stop_lon, result[stp].stop_lat],
 			   	type: "Point"
 			   }, 
 		  properties: {
@@ -49,8 +49,8 @@ if( ! result[stp].parent_station) {
 	 })
 
   }
- 	mainStop.save({})
- 	console.log(mainStop)
+ 	subway.save()
+ 	console.log(subway)
 }
 
 }).catch(function (err) {
@@ -71,4 +71,3 @@ module.exports = getMtaSched
 
 
 
-*/

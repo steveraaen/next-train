@@ -9,14 +9,12 @@ var mainStopSchema = new Schema({
       stop_id:{ type: String, required: true},
       stop_feed:{ type: Number, required: false}     
   },
-
    geometry: {
-   	type: {type: String, default: "Point"},
-   	coordinates: {type: [Number], index: '2dsphere'}
+    coordinates: [Number]
    }
 });
 
-var mainSubStop = mongoose.model("mainSubStop", mainStopSchema);
+var mainsubstop = mongoose.model("mainsubstop", mainStopSchema);
 
-module.exports = mainSubStop;
+module.exports = mainsubstop;
 
