@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {List, ListItem, makeSelectable} from 'material-ui/List';
+import {List, ListItem} from 'material-ui/List';
 import Schedule from './Schedule';
 
 
@@ -12,10 +12,12 @@ class App extends Component {
         this.state = {
           stops: {},
         }
+
     this.handleClick = this.handleClick.bind(this)
     this.getAll = this.getAll.bind(this)
     this.getStops = this.getStops.bind(this)
     this.getSchedule = this.getSchedule.bind(this)
+
     }
         getStops(lnglat) {
           console.log(this.state.lnglat)
@@ -34,7 +36,7 @@ class App extends Component {
 
     }
       getAll() {
-        var uloc = navigator.geolocation.getCurrentPosition(function(pos) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
             var { longitude, latitude, accuracy } = pos.coords
             this.setState({
                 longitude: longitude,
@@ -45,15 +47,13 @@ class App extends Component {
             this.getStops()
 
         }.bind(this))
-        console.log(this.state)
     }
   getSchedule(station, feed) {
     var sta = this.state.selectedStop;
-    var feed = this.state.feed
     return axios.get('/api/train', {
       params: {
         station: sta,
-        feed: parseInt(feed)
+        feed: parseInt(feed, 10)
       }
 
     }).then((response) => {
@@ -77,10 +77,12 @@ class App extends Component {
         this.getAll() 
     }
     handleClick(e) {
-      this.getSchedule(e.currentTarget.dataset.id, parseInt(e.currentTarget.dataset.feed))
+      
 
        this.setState({selectedStop: e.currentTarget.dataset.id,
-                      feed: parseInt(e.currentTarget.dataset.feed)
+                      feed: parseInt(e.currentTarget.dataset.feed, 10)
+                        }, function(){
+                          this.getSchedule(this.state.selectedStop, this.state.feed)
                         })  
 
 
@@ -97,8 +99,8 @@ e.preventDefault();
       if(Array.isArray(stopArr)) {     
       console.log(stopArr)
       var newStopArr = stopArr.map((stp, idx) => 
+    <ListItem style={listStyle.list} key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this.getSchedule)} primaryText={stp.properties.stop_name + "  is   " + parseFloat((stp.distance.dist * 100) / 100).toFixed(3) + "  miles away"} />       
 
-        <ListItem style={listStyle.list} key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name + "  is   " + parseFloat((stp.distance.dist * 100) / 100).toFixed(3) + "  miles away"} />       
       )
 }
     return (

@@ -13,7 +13,7 @@
     "request": "^2.83.0"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "heroku-postbuild": "cd client && yarn --production=false && yarn run build"
   }
 }

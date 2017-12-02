@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import moment from 'moment';
 import {
   Table,
@@ -20,7 +19,10 @@ const styles = {
   },
   south: {
   	backgroundColor:"#E39134",
-  	justify: "right"
+  	textAlign: "right"
+  },
+  center: {
+
   }
 };
 
@@ -80,9 +82,9 @@ class Schedule extends Component {
    					<TableHeaderColumn>Arrives In (minutes)</TableHeaderColumn>					
 				</TableRow>
 			</TableHeader>
-			<TableBody displayRowCheckbox={false}>
+			<TableBody displayRowCheckbox={false} >
 				{ nrthMap }
-			</TableBody>
+			</TableBody >
 		</Table>
           </div>
         </Tab>
@@ -90,14 +92,14 @@ class Schedule extends Component {
           <div>
             <h2 style={styles.headline}>Southbound Trains</h2>
 		<Table >
-			<TableHeader displayRowCheckbox={false}>
+			<TableHeader displaySelectAll={false}>
 				<TableRow >
 			        <TableHeaderColumn>Line</TableHeaderColumn>
 			        <TableHeaderColumn>Arrives At</TableHeaderColumn>
    					<TableHeaderColumn>Arrives In (minutes)</TableHeaderColumn>					
 				</TableRow>
 			</TableHeader>
-			<TableBody displayRowCheckbox={false}>
+			<TableBody className="right" displayRowCheckbox={false}>
 				{ sthMap }
 			</TableBody>
 		</Table>

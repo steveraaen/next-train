@@ -17,7 +17,9 @@
 .App-title {
   font-size: 1.5em;
 }
-
+.right  {
+  text-align: right;
+}
 .App-intro {
   font-size: large;
 }
