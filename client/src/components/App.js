@@ -11,11 +11,10 @@ class App extends Component {
         super(props);
         this.state = {
           stops: {},
-          selectedStop: ""
         }
+    this.handleClick = this.handleClick.bind(this)
     this.getAll = this.getAll.bind(this)
     this.getStops = this.getStops.bind(this)
-    this.handleClick = this.handleClick.bind(this)
     this.getSchedule = this.getSchedule.bind(this)
     }
         getStops(lnglat) {
@@ -49,10 +48,12 @@ class App extends Component {
         console.log(this.state)
     }
   getSchedule(station, feed) {
+    var sta = this.state.selectedStop;
+    var feed = this.state.feed
     return axios.get('/api/train', {
       params: {
-        station: this.state.selectedStop,
-        feed: parseInt(this.state.feed)
+        station: sta,
+        feed: parseInt(feed)
       }
 
     }).then((response) => {
@@ -76,18 +77,20 @@ class App extends Component {
         this.getAll() 
     }
     handleClick(e) {
-      e.preventDefault();      
-       this.setState({selectedStop: e.currentTarget.dataset.id,
-                               feed: parseInt(e.currentTarget.dataset.feed)
-                        })  
-      this.getSchedule(this.state.selectedStop, this.state.feed)
+      this.getSchedule(e.currentTarget.dataset.id, parseInt(e.currentTarget.dataset.feed))
 
+       this.setState({selectedStop: e.currentTarget.dataset.id,
+                      feed: parseInt(e.currentTarget.dataset.feed)
+                        })  
+
+
+e.preventDefault();
     }
     render() {
      const listStyle = {
     list: {
 
-    color: 'white',
+    /*color: 'white',*/
   },
 };
   var stopArr = this.state.stops
@@ -95,14 +98,14 @@ class App extends Component {
       console.log(stopArr)
       var newStopArr = stopArr.map((stp, idx) => 
 
-        <ListItem style={listStyle.list} key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name + "  is   " + Math.round(stp.distance.dist) + "  meters away"} secondaryText={stp.distance.dist}/>       
+        <ListItem style={listStyle.list} key={idx} data-id={stp.properties.stop_id} data-feed={stp.properties.stop_feed} value={stp.properties.stop_id} onClick={this.handleClick.bind(this)} primaryText={stp.properties.stop_name + "  is   " + parseFloat((stp.distance.dist * 100) / 100).toFixed(3) + "  miles away"} />       
       )
 }
     return (
     <MuiThemeProvider>
     <div>
       <div className="App">
-            <h1>3 stations.</h1>
+            <h1>Nearest 3 Stations</h1>
             <List >{newStopArr}</List>            
       </div>
       <Schedule schedule={this.state.schedule} north={this.state.north} south={this.state.south}/>

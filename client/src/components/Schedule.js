@@ -18,6 +18,10 @@ const styles = {
     marginBottom: 6,
     fontWeight: 400,
   },
+  south: {
+  	backgroundColor:"#E39134",
+  	justify: "right"
+  }
 };
 
 
@@ -69,10 +73,11 @@ class Schedule extends Component {
           <div>
             <h2 style={styles.headline}>Northbound Trains</h2>
 		<Table >
-			<TableHeader displayRowCheckbox={false}>
+			<TableHeader displaySelectAll={false} >
 				<TableRow >
+			        <TableHeaderColumn>Line</TableHeaderColumn>
 			        <TableHeaderColumn>Arrives At</TableHeaderColumn>
-   					<TableHeaderColumn>Arrives In</TableHeaderColumn>					
+   					<TableHeaderColumn>Arrives In (minutes)</TableHeaderColumn>					
 				</TableRow>
 			</TableHeader>
 			<TableBody displayRowCheckbox={false}>
@@ -81,14 +86,15 @@ class Schedule extends Component {
 		</Table>
           </div>
         </Tab>
-        <Tab label="South" value="b">
+        <Tab style={styles.south} label="South" value="b">
           <div>
             <h2 style={styles.headline}>Southbound Trains</h2>
 		<Table >
 			<TableHeader displayRowCheckbox={false}>
 				<TableRow >
+			        <TableHeaderColumn>Line</TableHeaderColumn>
 			        <TableHeaderColumn>Arrives At</TableHeaderColumn>
-   					<TableHeaderColumn>Arrives In</TableHeaderColumn>					
+   					<TableHeaderColumn>Arrives In (minutes)</TableHeaderColumn>					
 				</TableRow>
 			</TableHeader>
 			<TableBody displayRowCheckbox={false}>
