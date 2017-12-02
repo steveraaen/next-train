@@ -6,7 +6,7 @@ var SubwaysSchema = new Schema({
   
   geometry: {
 	   	coordinates: {type: [Number]},
-	   	type: {type: String, default: "Point"}
+	   	type: {type: String}
 	   }, 
   properties: {
       stop_name: {type: String},

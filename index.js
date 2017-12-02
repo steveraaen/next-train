@@ -32,11 +32,12 @@ app.get("/api/stops/:coordinates?", function(req, res) {
     var lng = parseFloat(req.query.coordinates[0]).toFixed(6)
     console.log(lng)
     console.log(lat)
+    if(req.query.coordinates) {
 Subways.aggregate([{
     $geoNear: {
         near: {
-            type: 'Point',
-            coordinates: [-73.983980, 40.676697]
+            type: "Point",
+            coordinates: [parseFloat(lng), parseFloat(lat)]
         },
         spherical: true,
         distanceField: 'distance.dist',
@@ -50,7 +51,7 @@ function(error, doc) {
         console.log(doc)
         res.json(doc);
     }
-})
+})}
  
 });
 
